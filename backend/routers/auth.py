@@ -141,3 +141,5 @@ async def login(request: EmailLoginRequest, db: Session = Depends(get_db)):
 async def logout():
     """Logout (client should delete token)"""
     return {"message": "Logged out successfully"}
+
+# Ashmit contribution
