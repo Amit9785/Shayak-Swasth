@@ -169,3 +169,4 @@ SELECT COUNT(*) as patient_count FROM patients;
 SELECT COUNT(*) as profile_count FROM profiles;
 
 SELECT 'Done! New signups will automatically create records.' as instruction;
+
