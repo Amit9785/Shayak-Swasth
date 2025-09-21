@@ -143,3 +143,4 @@ CREATE POLICY "Hospital managers can view authorized records only"
       AND (shared_access.expires_at IS NULL OR shared_access.expires_at > NOW())
     )
   );
+
