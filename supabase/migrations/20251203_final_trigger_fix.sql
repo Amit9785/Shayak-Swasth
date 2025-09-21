@@ -139,3 +139,4 @@ SELECT 'Trigger created!' as step1;
 SELECT COUNT(*) as doctors_count FROM doctors;
 SELECT COUNT(*) as managers_count FROM hospital_managers;
 SELECT * FROM doctors;
+
