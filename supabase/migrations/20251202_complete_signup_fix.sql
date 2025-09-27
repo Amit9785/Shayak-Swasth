@@ -277,3 +277,4 @@ UNION ALL
 SELECT 'doctors', COUNT(*) FROM public.doctors
 UNION ALL
 SELECT 'hospital_managers', COUNT(*) FROM public.hospital_managers;
+
