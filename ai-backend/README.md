@@ -213,3 +213,5 @@ Delete the `chroma_db` folder and restart to recreate it
 Make sure the frontend URL is allowed in the CORS configuration
 
 <!-- Ashmit contribution -->
+
+<!-- Ashmit contribution -->
