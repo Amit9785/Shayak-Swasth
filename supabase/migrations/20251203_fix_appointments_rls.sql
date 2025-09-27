@@ -98,3 +98,4 @@ USING (
 );
 
 SELECT 'Appointments RLS policies fixed!' as result;
+
