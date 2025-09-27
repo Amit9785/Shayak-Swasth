@@ -180,3 +180,4 @@ AND proname IN ('handle_new_user', 'generate_doctor_slots', 'update_appointments
                 'handle_emergency_shift', 'handle_missed_appointment', 'get_available_slots');
 
 SELECT 'Now try signing up again!' as instruction;
+
