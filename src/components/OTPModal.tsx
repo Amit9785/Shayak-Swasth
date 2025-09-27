@@ -87,3 +87,5 @@ const OTPModal = ({ open, onClose, onVerify, action }: OTPModalProps) => {
 };
 
 export default OTPModal;
+
+// Ashmit contribution
