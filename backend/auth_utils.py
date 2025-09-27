@@ -75,3 +75,5 @@ def require_role(required_roles: List[str]):
             )
         return current_user
     return role_checker
+
+# Ashmit contribution
