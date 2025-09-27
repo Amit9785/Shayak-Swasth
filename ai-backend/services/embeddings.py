@@ -54,3 +54,5 @@ class EmbeddingService:
 
 # Singleton instance
 embedding_service = EmbeddingService()
+
+# Ashmit contribution
