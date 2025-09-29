@@ -37,3 +37,4 @@ USING (bucket_id = 'medical-records');
 CREATE POLICY "Allow authenticated deletes" ON storage.objects
 FOR DELETE TO authenticated
 USING (bucket_id = 'medical-records');
+
