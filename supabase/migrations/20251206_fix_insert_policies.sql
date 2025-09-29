@@ -30,3 +30,4 @@ WHERE tablename IN ('patients', 'user_roles')
 ORDER BY tablename, policyname;
 
 SELECT 'Policies updated!' as status;
+
