@@ -177,3 +177,4 @@ SELECT 'Policies on doctors table:' as info;
 SELECT policyname, cmd FROM pg_policies WHERE tablename = 'doctors';
 
 SELECT 'Done! Now try signing up a new doctor.' as result;
+
