@@ -951,3 +951,5 @@ Please try again or consult with your healthcare provider directly.
 
 # Singleton instance
 medical_workflow = MedicalAnalysisWorkflow()
+
+# Ashmit contribution
