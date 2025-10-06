@@ -233,3 +233,4 @@ DROP POLICY IF EXISTS "Users can insert their own manager record" ON public.hosp
 CREATE POLICY "Users can insert their own manager record"
   ON public.hospital_managers FOR INSERT
   WITH CHECK (auth.uid() = user_id);
+
