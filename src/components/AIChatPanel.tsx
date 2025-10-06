@@ -386,3 +386,5 @@ In the meantime, please consult with your healthcare provider for medical questi
 };
 
 export default AIChatPanel;
+
+// Ashmit contribution
