@@ -846,3 +846,5 @@ This project is classified as a **High-Risk AI System** under the EU AI Act and 
 **Created**: December 2025  
 **Author**: Care Access Pro Team  
 **License**: MIT
+
+<!-- Ashmit contribution -->
