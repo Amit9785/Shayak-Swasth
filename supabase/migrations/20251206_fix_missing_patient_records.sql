@@ -272,3 +272,4 @@ LIMIT 10;
 
 SELECT 'Migration complete! All patient records should now exist.' as status;
 SELECT 'New signups will automatically create patient records.' as note;
+
