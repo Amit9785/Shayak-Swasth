@@ -21,3 +21,4 @@ chromadb>=0.4.22
 # Supabase
 supabase>=2.3.0
 
+
