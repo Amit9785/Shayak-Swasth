@@ -170,3 +170,5 @@ async def delete_record(
     log_access(db, current_user.id, "delete_record", "record", record_id)
     
     return {"message": "Record deleted successfully"}
+
+# Ashmit contribution
