@@ -16,3 +16,4 @@ USING (true);
 -- Verify
 SELECT 'Done!' as result;
 SELECT policyname, cmd FROM pg_policies WHERE tablename = 'profiles';
+
