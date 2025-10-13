@@ -233,3 +233,4 @@ GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres, service_role;
 
 -- Verification
 SELECT 'Migration complete: Signup trigger fixed!' as status;
+
