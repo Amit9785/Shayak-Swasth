@@ -31,3 +31,4 @@ CREATE INDEX IF NOT EXISTS idx_audit_logs_timestamp ON access_logs(timestamp DES
 -- Enable Row Level Security (optional - implement as needed)
 -- ALTER TABLE patients ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE records ENABLE ROW LEVEL SECURITY;
+
