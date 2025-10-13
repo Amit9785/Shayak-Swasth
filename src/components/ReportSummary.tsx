@@ -295,3 +295,5 @@ Always consult with your healthcare provider for medical advice.
 };
 
 export default ReportSummary;
+
+// Ashmit contribution
