@@ -7,3 +7,4 @@ CREATE INDEX IF NOT EXISTS idx_doctors_hospital ON public.doctors(hospital_id);
 
 -- Update appointments table to auto-fill hospital_id based on doctor's hospital
 -- This helps hospital managers see only their hospital's appointments
+
