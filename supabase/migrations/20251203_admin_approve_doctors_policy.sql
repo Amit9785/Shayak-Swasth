@@ -43,3 +43,4 @@ WITH CHECK (
     AND user_roles.role = 'admin'
   )
 );
+
