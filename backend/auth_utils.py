@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 import os
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from database import get_db

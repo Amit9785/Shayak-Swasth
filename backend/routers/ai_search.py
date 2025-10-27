@@ -5,6 +5,7 @@ from uuid import UUID
 import openai
 import json
 import numpy as np
+import os
 from database import get_db
 from models import User, Record, RecordText, Embedding
 from schemas import SearchRequest, SearchResult
