@@ -34,10 +34,10 @@ const AIChatPanel = ({ recordId, recordTitle }: AIChatPanelProps) => {
       let response;
       
       if (recordId) {
-        // Ask specific report
-        const { data, error } = await api.post<{ answer: string }>(
-          `/ai/ask/${recordId}`,
-          { question: userMessage }
+        // Ask specific report using Query & Compliance Agent
+        const { data, error } = await api.post<any>(
+          `/ai/ask`,
+          { record_id: recordId, question: userMessage }
         );
         
         if (error) {
@@ -46,11 +46,13 @@ const AIChatPanel = ({ recordId, recordTitle }: AIChatPanelProps) => {
           return;
         }
         
-        response = data?.answer || "No response received";
+        // Extract answer from agent response
+        response = data?.data?.answer || data?.answer || "No response received";
       } else {
-        // Semantic search across all reports
+        // Semantic search across all reports using Query & Compliance Agent
         const { data, error } = await api.post<any>("/ai/search", { 
-          query: userMessage 
+          query: userMessage,
+          top_k: 5
         });
         
         if (error) {
@@ -59,12 +61,13 @@ const AIChatPanel = ({ recordId, recordTitle }: AIChatPanelProps) => {
           return;
         }
         
-        const results = data?.results || [];
+        // Extract results from agent response
+        const results = data?.data?.results || data?.results || [];
         response = results.length > 0
           ? `Found ${results.length} relevant records:\n\n${results
               .slice(0, 3)
               .map((r: any, i: number) => 
-                `${i + 1}. ${r.record_title} (${(r.relevance_score * 100).toFixed(1)}% match)\n   ${r.matched_text}`
+                `${i + 1}. ${r.title || 'Untitled'} (${(r.similarity * 100).toFixed(1)}% match)\n   ${r.text?.substring(0, 150) || 'No preview available'}...`
               )
               .join("\n\n")}`
           : "No relevant information found in your medical records.";

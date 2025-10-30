@@ -81,7 +81,7 @@ class ApiClient {
     return this.request<T>(endpoint, { method: "DELETE" });
   }
 
-  async uploadFile<T>(endpoint: string, file: File): Promise<ApiResponse<T>> {
+  async uploadFile<T>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<ApiResponse<T>> {
     const formData = new FormData();
     formData.append("file", file);
 
@@ -91,7 +91,17 @@ class ApiClient {
         headers["Authorization"] = `Bearer ${this.token}`;
       }
 
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      // Build URL with query parameters for additional data
+      let url = `${this.baseUrl}${endpoint}`;
+      if (additionalData) {
+        const params = new URLSearchParams();
+        Object.entries(additionalData).forEach(([key, value]) => {
+          params.append(key, String(value));
+        });
+        url += `?${params.toString()}`;
+      }
+
+      const response = await fetch(url, {
         method: "POST",
         headers,
         body: formData,
@@ -107,6 +117,18 @@ class ApiClient {
     } catch (error) {
       return { error: error instanceof Error ? error.message : "Upload failed" };
     }
+  }
+
+  // Convenience method for medical record upload
+  async uploadMedicalRecord<T>(
+    file: File, 
+    patientId: string, 
+    title: string
+  ): Promise<ApiResponse<T>> {
+    return this.uploadFile<T>("/records/upload", file, {
+      patient_id: patientId,
+      title: title
+    });
   }
 }
 

@@ -1,154 +1,113 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from uuid import UUID
-import openai
-import json
-import numpy as np
-import os
+from pydantic import BaseModel
 from database import get_db
-from models import User, Record, RecordText, Embedding
-from schemas import SearchRequest, SearchResult
+from models import User
 from auth_utils import get_current_user
+from agents.agent_manager import get_agent_manager
 
 router = APIRouter()
 
-# OpenAI Configuration
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Request/Response Models
+class SearchRequest(BaseModel):
+    query: str
+    patient_id: Optional[UUID] = None
+    top_k: int = 5
 
-@router.post("/embed")
-async def create_embeddings(
+class QuestionRequest(BaseModel):
+    record_id: UUID
+    question: str
+
+@router.post("/process/{record_id}")
+async def process_record_insights(
     record_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Generate embeddings for a record (called after OCR/text extraction)"""
-    record = db.query(Record).filter(Record.id == record_id).first()
-    if not record:
+    """
+    Manually trigger Medical Insights Agent for a record.
+    Normally triggered automatically after upload.
+    """
+    agent_manager = get_agent_manager()
+    
+    result = await agent_manager.medical_insights_agent.process_record(
+        db=db,
+        record_id=record_id
+    )
+    
+    if not result.get("success"):
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Record not found"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=result.get("error", "Processing failed")
         )
     
-    # Get extracted texts
-    texts = db.query(RecordText).filter(RecordText.record_id == record_id).all()
-    
-    if not texts:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No text extracted from record"
-        )
-    
-    # Generate embeddings
-    for text_chunk in texts:
-        response = openai.Embedding.create(
-            model="text-embedding-3-small",
-            input=text_chunk.extracted_text
-        )
-        
-        embedding_vector = response['data'][0]['embedding']
-        
-        # Store embedding
-        embedding = Embedding(
-            record_id=record_id,
-            chunk_id=text_chunk.id,
-            embedding_json=json.dumps(embedding_vector)
-        )
-        db.add(embedding)
-    
-    db.commit()
-    
-    return {"message": "Embeddings created successfully", "count": len(texts)}
+    return result
 
-@router.post("/search", response_model=List[SearchResult])
+@router.post("/search")
 async def semantic_search(
     request: SearchRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Semantic search across medical records"""
-    # Generate query embedding
-    response = openai.Embedding.create(
-        model="text-embedding-3-small",
-        input=request.query
+    """
+    Semantic search across accessible medical records using Query & Compliance Agent.
+    Enforces role-based access control automatically.
+    """
+    agent_manager = get_agent_manager()
+    
+    result = await agent_manager.orchestrate_semantic_search(
+        db=db,
+        user_id=current_user.id,
+        query=request.query,
+        top_k=request.top_k
     )
-    query_embedding = np.array(response['data'][0]['embedding'])
     
-    # Get all embeddings (in production, use pgvector for efficient similarity search)
-    embeddings = db.query(Embedding).all()
-    
-    results = []
-    for emb in embeddings:
-        emb_vector = np.array(json.loads(emb.embedding_json))
-        
-        # Calculate cosine similarity
-        similarity = np.dot(query_embedding, emb_vector) / (
-            np.linalg.norm(query_embedding) * np.linalg.norm(emb_vector)
+    if not result.get("success"):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=result.get("error", "Search failed")
         )
-        
-        if similarity > 0.7:  # Threshold
-            record = db.query(Record).filter(Record.id == emb.record_id).first()
-            if record and (not request.patient_id or record.patient_id == request.patient_id):
-                chunk = db.query(RecordText).filter(RecordText.id == emb.chunk_id).first()
-                
-                results.append({
-                    "record_id": record.id,
-                    "title": record.title,
-                    "relevance_score": float(similarity),
-                    "excerpt": chunk.extracted_text[:200] if chunk else ""
-                })
     
-    # Sort by relevance
-    results.sort(key=lambda x: x["relevance_score"], reverse=True)
-    
-    return results[:10]  # Top 10 results
+    return result
 
 @router.post("/ask")
-async def ask_report(
-    record_id: UUID,
-    question: str,
+async def ask_question(
+    request: QuestionRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Ask questions about a specific report using AI"""
-    record = db.query(Record).filter(Record.id == record_id).first()
-    if not record:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Record not found"
-        )
+    """
+    Ask questions about a specific medical record using Query & Compliance Agent.
+    Automatically checks access permissions and uses RAG for accurate answers.
+    """
+    agent_manager = get_agent_manager()
     
-    # Get all text from record
-    texts = db.query(RecordText).filter(RecordText.record_id == record_id).all()
-    full_text = "\n".join([t.extracted_text for t in texts])
-    
-    if not full_text:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No text available from this record"
-        )
-    
-    # Generate response using OpenAI
-    response = openai.ChatCompletion.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a medical assistant helping patients understand their medical reports. Provide clear, accurate information but remind users to consult their doctor for medical advice."
-            },
-            {
-                "role": "user",
-                "content": f"Based on this medical report:\n\n{full_text}\n\nQuestion: {question}"
-            }
-        ],
-        temperature=0.7,
-        max_tokens=500
+    result = await agent_manager.orchestrate_question_answering(
+        db=db,
+        user_id=current_user.id,
+        record_id=request.record_id,
+        question=request.question
     )
     
-    answer = response.choices[0].message.content
+    if not result.get("success"):
+        if "Access denied" in result.get("error", ""):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You don't have permission to access this record"
+            )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=result.get("error", "Question answering failed")
+        )
     
-    return {
-        "question": question,
-        "answer": answer,
-        "record_title": record.title
-    }
+    return result
+
+@router.get("/agents/status")
+async def get_agents_status(
+    current_user: User = Depends(get_current_user)
+):
+    """Get status of all agents (for debugging/monitoring)"""
+    agent_manager = get_agent_manager()
+    return agent_manager.get_agent_status()
