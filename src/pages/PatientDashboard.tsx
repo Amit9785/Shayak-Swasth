@@ -8,11 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, User, FileText, Bot } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PatientDashboard = () => {
   const [mockRecords, setMockRecords] = useState<any[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [showAIChat, setShowAIChat] = useState(false);
+  const { getPatientId } = useAuth();
 
   useEffect(() => {
     fetchRecords();
@@ -30,16 +32,30 @@ const PatientDashboard = () => {
   const handleUpload = async () => {
     const input = document.createElement("input");
     input.type = "file";
+    input.accept = ".pdf,.jpg,.jpeg,.png";
     input.onchange = async (e: any) => {
       const file = e.target?.files?.[0];
       if (!file) return;
       
-      const { error } = await api.uploadFile("/records/upload", file);
+      const patientId = getPatientId();
+      if (!patientId) {
+        toast.error("Patient profile not found. Please complete your profile or re-login.");
+        return;
+      }
+      const title = prompt("Enter a title for this medical record:", file.name) || file.name;
+      
+      toast.info("Uploading and processing with AI agents...");
+      
+      const { data, error } = await api.uploadMedicalRecord(file, patientId, title);
       if (error) {
         toast.error(error);
         return;
       }
-      toast.success("File uploaded successfully!");
+      
+      toast.success(
+        data?.message || "Record uploaded! AI agents are processing your document.",
+        { duration: 5000 }
+      );
       fetchRecords();
     };
     input.click();

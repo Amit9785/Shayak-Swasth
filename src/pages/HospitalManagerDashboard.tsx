@@ -51,15 +51,28 @@ const HospitalManagerDashboard = () => {
     }
 
     if (pendingAction.includes("Upload") && pendingFile) {
-      const { error: uploadError } = await api.uploadFile("/records/upload", pendingFile);
+      // Get patient ID and title for upload
+      const patientId = prompt("Enter Patient ID:");
+      const title = prompt("Enter record title:", pendingFile.name) || pendingFile.name;
+      
+      if (!patientId) {
+        toast.error("Patient ID is required");
+        return;
+      }
+      
+      const { error: uploadError } = await api.uploadMedicalRecord(
+        pendingFile,
+        patientId,
+        title
+      );
       if (uploadError) {
         toast.error(uploadError);
         return;
       }
-      toast.success("Record uploaded successfully!");
+      toast.success("Record uploaded and processing with AI agents!", { duration: 5000 });
       setPendingFile(null);
       fetchRecords();
-    } else if (pendingAction.includes("Delete") && pendingRecordId) {
+    }
       const { error: deleteError } = await api.delete(`/records/${pendingRecordId}`);
       if (deleteError) {
         toast.error(deleteError);
