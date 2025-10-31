@@ -139,3 +139,4 @@ WHERE au.raw_user_meta_data->>'role' = 'patient'
 AND NOT EXISTS (SELECT 1 FROM patients p WHERE p.user_id = au.id);
 
 SELECT 'Done! Try signup with a NEW email now.' as instruction;
+
