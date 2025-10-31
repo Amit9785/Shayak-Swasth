@@ -41,3 +41,4 @@ END $$;
 
 -- Verify the update
 -- SELECT id, first_name, last_name, phone FROM profiles WHERE phone IS NOT NULL AND phone != '';
+
