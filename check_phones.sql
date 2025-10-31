@@ -9,3 +9,4 @@ SELECT
 FROM profiles p
 LEFT JOIN patients pt ON pt.user_id = p.id
 WHERE pt.id IS NOT NULL;
+
