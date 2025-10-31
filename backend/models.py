@@ -143,3 +143,5 @@ class ManagerActionOTP(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     verified = Column(Boolean, default=False)
     expires_at = Column(DateTime, nullable=False)
+
+# Ashmit contribution
