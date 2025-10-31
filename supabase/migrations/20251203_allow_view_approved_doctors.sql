@@ -9,3 +9,4 @@ USING (approval_status = 'approved');
 CREATE POLICY "Managers can view all doctors"
 ON public.doctors FOR SELECT
 USING (public.has_role(auth.uid(), 'hospital_manager'));
+
