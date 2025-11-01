@@ -248,11 +248,11 @@ export function UploadRecordDialog({ patientId, onSuccess }: UploadRecordDialogP
               </>
             )}
           </DialogTitle>
-          {isManager && otpStep === 'otp' && (
-            <DialogDescription>
-              Enter the 6-digit OTP sent to your phone number for verification.
-            </DialogDescription>
-          )}
+          <DialogDescription>
+            {isManager && otpStep === 'otp' 
+              ? "Enter the 6-digit OTP sent to your phone number for verification."
+              : "Upload a medical record for this patient."}
+          </DialogDescription>
         </DialogHeader>
 
         {/* Step 1: Form (for non-managers, this is the only step) */}

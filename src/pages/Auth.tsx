@@ -1,21 +1,43 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Activity, ArrowLeft, Mail } from "lucide-react";
+import { Activity, ArrowLeft, Mail, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showResend, setShowResend] = useState(false);
 
   useEffect(() => {
+    // Check for error in URL hash (from expired email links)
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const error = params.get('error');
+      const errorCode = params.get('error_code');
+      const errorDescription = params.get('error_description');
+      
+      if (error === 'access_denied' && errorCode === 'otp_expired') {
+        toast.error("Email link has expired. Please request a new confirmation email.");
+        setShowResend(true);
+        // Clear the hash
+        window.history.replaceState(null, '', window.location.pathname);
+      } else if (error) {
+        toast.error(errorDescription?.replace(/\+/g, ' ') || "Authentication error");
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
+
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
@@ -31,6 +53,32 @@ const Auth = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast.error("Please enter your email address first");
+      return;
+    }
+    
+    setResendLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`
+        }
+      });
+      
+      if (error) throw error;
+      toast.success("Confirmation email sent! Please check your inbox.");
+      setShowResend(false);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to resend confirmation email");
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,6 +154,35 @@ const Auth = () => {
                     <Mail className="mr-2 h-4 w-4" />
                     {loading ? "Logging in..." : "Login"}
                   </Button>
+                  
+                  {showResend && (
+                    <div className="pt-2 border-t">
+                      <p className="text-sm text-muted-foreground mb-2">
+                        Email link expired? Enter your email above and resend:
+                      </p>
+                      <Button 
+                        type="button"
+                        variant="outline" 
+                        className="w-full" 
+                        onClick={handleResendConfirmation}
+                        disabled={resendLoading}
+                      >
+                        <RefreshCw className={`mr-2 h-4 w-4 ${resendLoading ? "animate-spin" : ""}`} />
+                        {resendLoading ? "Sending..." : "Resend Confirmation Email"}
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {!showResend && (
+                    <Button 
+                      type="button"
+                      variant="link" 
+                      className="w-full text-sm" 
+                      onClick={() => setShowResend(true)}
+                    >
+                      Need to resend confirmation email?
+                    </Button>
+                  )}
                 </form>
               </TabsContent>
 

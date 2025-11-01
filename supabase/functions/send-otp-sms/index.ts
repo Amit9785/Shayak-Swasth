@@ -13,7 +13,15 @@ serve(async (req) => {
   }
 
   try {
-    const body = await req.json()
+    let body;
+    try {
+      body = await req.json()
+    } catch (e) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON body' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
     
     // Support both old format (phone, otp) and new format (patient_id, phone, purpose, etc.)
     const { 
@@ -24,7 +32,7 @@ serve(async (req) => {
       requester_name, 
       requester_id,
       requester_type = 'doctor'
-    } = body
+    } = body || {}
 
     if (!phone) {
       return new Response(

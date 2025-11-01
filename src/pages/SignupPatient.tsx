@@ -57,10 +57,10 @@ export default function SignupPatient() {
       if (authError) throw authError;
       if (!authData.user) throw new Error("User creation failed");
 
-      // Wait a moment for the auth to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait a moment for the auth trigger to complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Create user role
+      // Create user role (may already exist from trigger)
       const { error: roleError } = await supabase
         .from("user_roles")
         .upsert({
@@ -69,10 +69,11 @@ export default function SignupPatient() {
         }, { onConflict: 'user_id,role' });
 
       if (roleError) {
-        console.log('Role insert:', roleError.message);
+        console.warn('Role insert warning:', roleError.message);
+        // Don't throw - this might already exist from the trigger
       }
 
-      // Create patient record
+      // Create patient record (may already exist from trigger)
       const { error: patientError } = await supabase
         .from("patients")
         .upsert({
@@ -86,7 +87,9 @@ export default function SignupPatient() {
         }, { onConflict: 'user_id' });
 
       if (patientError) {
-        console.log('Patient insert:', patientError.message);
+        console.error('Patient insert error:', patientError.message);
+        // Show warning but don't fail signup - the trigger might have created it
+        toast.warning('Note: Some profile data may need to be updated after login.');
       }
 
       // Update profile with phone
@@ -100,7 +103,7 @@ export default function SignupPatient() {
         .eq('id', authData.user.id);
 
       if (profileError) {
-        console.log('Profile update:', profileError.message);
+        console.warn('Profile update warning:', profileError.message);
       }
 
       toast.success("Account created successfully! You can now login.");
