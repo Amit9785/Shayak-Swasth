@@ -345,3 +345,5 @@ Generated from Care Access Pro
 };
 
 export default DoctorAIChatPanel;
+
+// Ashmit contribution
