@@ -25,3 +25,4 @@ endif
 alias pydoc python -m pydoc
 
 rehash
+
