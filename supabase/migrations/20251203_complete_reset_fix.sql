@@ -139,3 +139,4 @@ SELECT tablename, policyname, cmd
 FROM pg_policies 
 WHERE tablename IN ('user_roles', 'doctors', 'profiles')
 ORDER BY tablename, policyname;
+
