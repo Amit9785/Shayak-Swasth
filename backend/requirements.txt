@@ -1,3 +1,4 @@
+# FastAPI Core
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
 sqlalchemy==2.0.36
@@ -7,10 +8,23 @@ pydantic-settings==2.10.1
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.17
+python-dotenv==1.0.1
+
+# AWS & Cloud Services
 boto3==1.35.0
+
+# AI & Machine Learning
 openai==1.0.0
 numpy==2.0.0
-python-dotenv==1.0.1
+
+# Document Processing (for Medical Insights Agent)
+PyPDF2==3.0.1
+Pillow==10.1.0
+pytesseract==0.3.10
+
+# Task Queue (for async processing)
+celery==5.3.4
+redis==5.0.1
 
 # Optional (uncomment when ready to use)
 # twilio==9.0.0
