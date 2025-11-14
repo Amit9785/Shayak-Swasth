@@ -67,3 +67,4 @@ if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
     set -gx _OLD_FISH_PROMPT_OVERRIDE "$VIRTUAL_ENV"
     set -gx VIRTUAL_ENV_PROMPT '(venv) '
 end
+
