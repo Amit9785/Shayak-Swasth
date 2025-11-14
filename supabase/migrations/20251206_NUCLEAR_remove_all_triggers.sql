@@ -39,3 +39,4 @@ AND tgname NOT LIKE 'RI_%';
 
 SELECT 'SUCCESS: All custom triggers removed!' as result;
 SELECT 'Signup should now work. Frontend will create patient records.' as note;
+
