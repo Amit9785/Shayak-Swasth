@@ -52,3 +52,4 @@ WITH CHECK (auth.uid() = requester_id);
 CREATE INDEX IF NOT EXISTS idx_access_otp_patient ON public.access_otp(patient_id);
 CREATE INDEX IF NOT EXISTS idx_access_otp_requester ON public.access_otp(requester_id);
 CREATE INDEX IF NOT EXISTS idx_access_otp_lookup ON public.access_otp(patient_id, otp_code, verified, used, expires_at);
+
