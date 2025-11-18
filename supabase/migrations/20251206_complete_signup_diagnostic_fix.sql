@@ -262,3 +262,4 @@ AND NOT EXISTS (SELECT 1 FROM patients p WHERE p.user_id = au.id);
 
 SELECT '=== COMPLETE ===' as section;
 SELECT 'Try signing up as a new patient now!' as instruction;
+
