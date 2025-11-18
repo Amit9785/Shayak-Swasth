@@ -444,3 +444,5 @@ Generated from Care Access Pro
 };
 
 export default DoctorMultiAnalysisPanel;
+
+// Ashmit contribution
