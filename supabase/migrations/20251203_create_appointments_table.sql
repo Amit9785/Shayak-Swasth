@@ -169,3 +169,4 @@ FROM public.user_roles ur
 CROSS JOIN generate_series(1, 5) AS day_num -- Monday to Friday
 WHERE ur.role = 'doctor'
 ON CONFLICT (doctor_id, day_of_week) DO NOTHING;
+
