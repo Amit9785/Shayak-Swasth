@@ -459,3 +459,5 @@ For deployment issues:
 3. Test database connectivity
 4. Check firewall rules
 5. Review nginx logs: `sudo tail -f /var/log/nginx/error.log`
+
+<!-- Ashmit contribution -->
