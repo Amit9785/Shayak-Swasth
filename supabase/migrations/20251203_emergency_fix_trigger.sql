@@ -50,3 +50,4 @@ CREATE TRIGGER on_auth_user_created
   EXECUTE FUNCTION public.handle_new_user();
 
 SELECT 'Simple trigger created - signups should work now!' as result;
+
