@@ -50,3 +50,4 @@ SELECT tgname, tgtype FROM pg_trigger WHERE tgname = 'on_auth_user_created';
 -- Now signups should work!
 -- The frontend code will handle creating patient records
 -- =====================================================
+
