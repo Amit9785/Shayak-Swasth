@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Healthcare color system */
+    --background: 210 40% 98%;
+    --foreground: 210 40% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 15%;
+
+    /* Medical Blue - Trust & Professional */
+    --primary: 210 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 210 70% 65%;
+    --primary-dark: 210 70% 35%;
+
+    /* Clinical Green - Health & Safety */
+    --secondary: 150 50% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 150 50% 60%;
+
+    /* Muted backgrounds */
+    --muted: 210 30% 96%;
+    --muted-foreground: 210 20% 50%;
+
+    /* Alert/Warning - Amber */
+    --accent: 40 90% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 30% 88%;
+    --input: 210 30% 92%;
+    --ring: 210 70% 50%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210, 70%, 50%), hsl(210, 70%, 35%));
+    --gradient-secondary: linear-gradient(135deg, hsl(150, 50%, 45%), hsl(150, 50%, 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(210, 70%, 50%) 0%, hsl(150, 50%, 45%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%), hsl(210, 40%, 99%));
+
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(210 70% 50% / 0.1);
+    --shadow-medium: 0 4px 16px -4px hsl(210 70% 50% / 0.15);
+    --shadow-strong: 0 8px 24px -6px hsl(210 70% 50% / 0.2);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 210 40% 8%;
+    --foreground: 210 30% 95%;
+
+    --card: 210 40% 10%;
+    --card-foreground: 210 30% 95%;
+
+    --popover: 210 40% 10%;
+    --popover-foreground: 210 30% 95%;
+
+    --primary: 210 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 210 70% 65%;
+    --primary-dark: 210 70% 40%;
+
+    --secondary: 150 50% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 150 50% 60%;
+
+    --muted: 210 30% 15%;
+    --muted-foreground: 210 20% 60%;
+
+    --accent: 40 90% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 30% 20%;
+    --input: 210 30% 18%;
+    --ring: 210 70% 55%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(210, 70%, 40%) 0%, hsl(150, 50%, 35%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Scrollbar Styles for AI Chat */
+.scrollbar-visible {
+  scrollbar-width: thin;
+  scrollbar-color: #14b8a6 #e2e8f0;
+}
+
+.scrollbar-visible::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #14b8a6, #0d9488);
+  border-radius: 4px;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0d9488, #0f766e);
+}
