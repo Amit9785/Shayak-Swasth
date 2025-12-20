@@ -1,8 +1,8 @@
-# Shayak Swasth (Care Access Pro)# Welcome to project
+# Smart Healthcare Record System (Care Access Pro)
 
+🏥 **AI-Powered Healthcare Records Management System**
 
-
-🏥 **AI-Powered Healthcare Records Management System**## Project info
+A comprehensive enterprise healthcare management platform featuring AI-driven medical record analysis, role-based access control, and secure patient data management.
 
 
 
@@ -202,8 +202,8 @@ care-access-pro/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/Amit9785/Shayak-Swasth.git
-cd Shayak-Swasth
+git clone https://github.com/Amit9785/smart-heatcare-record-system.git
+cd smart-heatcare-record-system
 ```
 
 2. **Frontend Setup**
@@ -475,8 +475,8 @@ Contributions are welcome! Please follow these steps:
 ## 📧 Support
 
 For issues and questions:
-- **GitHub Issues**: [Create an issue](https://github.com/Amit9785/Shayak-Swasth/issues)
-- **Email**: support@shayakswasth.com
+- **GitHub Issues**: [Create an issue](https://github.com/Amit9785/smart-heatcare-record-system/issues)
+- **Email**: support@healthcaresystem.com
 
 ---
 
@@ -508,6 +508,6 @@ For issues and questions:
 
 **Built with ❤️ for better healthcare access**
 
-[Live Demo](https://48d689c6-79db-48cb-acef-d00caa6391ba.lovableproject.com) • [Documentation](./ARCHITECTURE.md) • [Report Bug](https://github.com/Amit9785/Shayak-Swasth/issues)
+[Live Demo](https://48d689c6-79db-48cb-acef-d00caa6391ba.lovableproject.com) • [Documentation](./ARCHITECTURE.md) • [Report Bug](https://github.com/Amit9785/smart-heatcare-record-system/issues)
 
 </div>
